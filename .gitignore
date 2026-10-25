@@ -1,0 +1,60 @@
+# ==========================================
+# COURAA SOC & Threat Detector - .gitignore
+# Repository: Pratham1910-cs/cyber
+# Path: final project
+# ==========================================
+
+# 1. API Keys, Tokens & Secrets
+.env
+.env.local
+.env.*
+*.env
+
+# 2. SQLite Database & Ephemeral State
+ssh_detector.db
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+*.db-wal
+*.db-shm
+
+# 3. Machine Learning Model Artifacts
+ssh_detector_model.joblib
+*.joblib
+*.pkl
+*.pickle
+
+# 4. Logs and Telemetry Ingestion
+*.log
+auth.log
+syslog
+uploads/
+
+# 5. Generated Export Dossiers & Evidence
+*.pdf
+couraa-compliance-audit-evidence-*.json
+reports_generated/
+
+# 6. Python Cache & Virtual Environments
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+venv/
+env/
+ENV/
+
+# 7. IDE, Editor & OS Metadata
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 8. Temporary and Scratch Files
+scratch/
+tmp/
+*.tmp
