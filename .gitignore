@@ -1,5 +1,5 @@
 # ==========================================
-# COURAA SOC & Threat Detector - .gitignore
+# ASTRALOCK SOC & Threat Detector - .gitignore
 # Repository: Pratham1910-cs/cyber
 # Path: final project
 # ==========================================
@@ -33,6 +33,7 @@ uploads/
 
 # 5. Generated Export Dossiers & Evidence
 *.pdf
+astralock-compliance-audit-evidence-*.json
 couraa-compliance-audit-evidence-*.json
 reports_generated/
 

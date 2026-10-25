@@ -1,6 +1,6 @@
 /* ==========================================================================
-   COURAA SOC & SIEM CYBER DEFENSE PLATFORM - DESIGN SYSTEM
-   Exact recreation of the COURAA AI Analyst Interface
+   ASTRALOCK SOC & SIEM CYBER DEFENSE PLATFORM - DESIGN SYSTEM
+   Exact recreation of the ASTRALOCK AI Analyst Interface
    ========================================================================== */
 
 :root {
@@ -20,11 +20,17 @@
   --border-focus: #313745;
   --border-highlight: #ff5520;
 
-  /* Brand Accents */
-  --couraa-orange: #ff5520;
-  --couraa-orange-hover: #ff6b35;
-  --couraa-orange-glow: rgba(255, 85, 32, 0.4);
-  --couraa-orange-dim: rgba(255, 85, 32, 0.12);
+  /* ASTRALOCK Brand Accents */
+  --astralock-orange: #ff5520;
+  --astralock-orange-hover: #ff6b35;
+  --astralock-orange-glow: rgba(255, 85, 32, 0.4);
+  --astralock-orange-dim: rgba(255, 85, 32, 0.12);
+
+  /* Backward Compatibility Aliases */
+  --couraa-orange: var(--astralock-orange);
+  --couraa-orange-hover: var(--astralock-orange-hover);
+  --couraa-orange-glow: var(--astralock-orange-glow);
+  --couraa-orange-dim: var(--astralock-orange-dim);
 
   /* Alert & Indicator Colors */
   --crimson-attack: #cf222e;

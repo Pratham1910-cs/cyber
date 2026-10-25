@@ -96,7 +96,7 @@
   function showToast(message, isError = false) {
     if (!els.toast) return;
     els.toast.textContent = message;
-    els.toast.style.borderLeftColor = isError ? "var(--crimson-attack)" : "var(--couraa-orange)";
+    els.toast.style.borderLeftColor = isError ? "var(--crimson-attack)" : "var(--astralock-orange)";
     els.toast.classList.add("visible");
     clearTimeout(state.toastTimer);
     state.toastTimer = setTimeout(() => {
@@ -106,13 +106,14 @@
 
   async function apiRequest(url, options = {}) {
     const headers = new Headers(options.headers || {});
-    const apiKey = sessionStorage.getItem("couraa-api-key");
+    const apiKey = sessionStorage.getItem("astralock-api-key") || sessionStorage.getItem("couraa-api-key");
     if (apiKey) headers.set("X-API-Key", apiKey);
 
     let res = await fetch(url, { ...options, headers });
     if (res.status === 401 && options.method === "POST" && !apiKey) {
       const entered = window.prompt("Security Authorization Required. Enter API Key:");
       if (entered) {
+        sessionStorage.setItem("astralock-api-key", entered);
         sessionStorage.setItem("couraa-api-key", entered);
         headers.set("X-API-Key", entered);
         res = await fetch(url, { ...options, headers });
@@ -453,7 +454,7 @@
         extraHtml += `
           <div class="ai-action-recommendation" style="margin-top: 12px;">
             <p class="recommendation-text">${cta}</p>
-            <button class="run-playbook-btn" type="button" onclick="window.couraaExecutePlaybook()">
+            <button class="run-playbook-btn" type="button" onclick="window.astralockExecutePlaybook()">
               <i class="fa-solid fa-play"></i>
               <span>${pb}</span>
             </button>
@@ -519,7 +520,7 @@
 
     try {
       const activePrompt = els.aiInput ? els.aiInput.value : "";
-      const geminiKey = sessionStorage.getItem("couraa-gemini-key") || "";
+      const geminiKey = sessionStorage.getItem("astralock-gemini-key") || sessionStorage.getItem("couraa-gemini-key") || "";
       const data = await apiRequest("/api/ai-analyst/chat", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -578,7 +579,7 @@
         extraHtml += `
           <div class="ai-action-recommendation" style="margin-top: 12px;">
             <p class="recommendation-text">${ctaText}</p>
-            <button class="run-playbook-btn" type="button" onclick="window.couraaExecutePlaybook()">
+            <button class="run-playbook-btn" type="button" onclick="window.astralockExecutePlaybook()">
               <i class="fa-solid fa-play"></i>
               <span>${pbLabel}</span>
             </button>
@@ -627,7 +628,7 @@
   }
 
   // Expose for dynamic chat playbook button callbacks
-  window.couraaExecutePlaybook = executePlaybook;
+  window.astralockExecutePlaybook = window.couraaExecutePlaybook = executePlaybook;
 
   // ==========================================================================
   // VIEW 2: ALERTS & REAL-TIME DETECTION FEED
@@ -1006,7 +1007,7 @@
           </td>
           <td>${statusBadge}</td>
           <td>
-            <button class="row-block-btn ${isIsolated ? 'blocked-done' : ''}" type="button" style="padding:4px 10px; font-size:11px;" onclick="window.couraaAssetAction('${asset.hostname}', '${asset.ip}')">
+            <button class="row-block-btn ${isIsolated ? 'blocked-done' : ''}" type="button" style="padding:4px 10px; font-size:11px;" onclick="window.astralockAssetAction('${asset.hostname}', '${asset.ip}')">
               ${isIsolated ? '<i class="fa-solid fa-shield"></i> Isolated' : '<i class="fa-solid fa-ban"></i> Isolate Host'}
             </button>
           </td>
@@ -1055,7 +1056,7 @@
           </td>
           <td><span class="badge-classification attack">${ioc.status}</span></td>
           <td>
-            <button class="row-block-btn blocked-done" type="button" style="padding:4px 10px; font-size:11px;" onclick="window.couraaAskGeminiIntel('${ioc.indicator}', '${ioc.category}', '${ioc.asn}')">
+            <button class="row-block-btn blocked-done" type="button" style="padding:4px 10px; font-size:11px;" onclick="window.astralockAskGeminiIntel('${ioc.indicator}', '${ioc.category}', '${ioc.asn}')">
               <i class="fa-solid fa-sparkles"></i> Intel Dossier
             </button>
           </td>
@@ -1089,7 +1090,7 @@
 
         tr.innerHTML = `
           <td style="font-weight:600; color:var(--text-white);">
-            <i class="fa-solid fa-bolt" style="color:var(--couraa-orange); margin-right:8px;"></i>${pb.name}
+            <i class="fa-solid fa-bolt" style="color:var(--astralock-orange); margin-right:8px;"></i>${pb.name}
           </td>
           <td style="font-size:11.5px; color:var(--text-secondary); max-width:280px;">${pb.desc}</td>
           <td><span class="signature-chip">${pb.mode}</span></td>
@@ -1100,7 +1101,7 @@
             </span>
           </td>
           <td>
-            <button class="run-playbook-btn" type="button" style="padding:5px 12px; font-size:11px;" onclick="window.couraaTriggerSoarPlaybook('${pb.id}', '${pb.name}')">
+            <button class="run-playbook-btn" type="button" style="padding:5px 12px; font-size:11px;" onclick="window.astralockTriggerSoarPlaybook('${pb.id}', '${pb.name}')">
               <i class="fa-solid fa-play"></i> Execute
             </button>
           </td>
@@ -1136,7 +1137,7 @@
           <td style="font-family:var(--font-mono); color:var(--text-secondary);">${sim.target}</td>
           <td><span class="badge-classification attack" style="background:rgba(16,185,129,0.15); color:var(--emerald-green); border-color:rgba(16,185,129,0.3);"><i class="fa-solid fa-circle-check"></i> ${sim.status}</span></td>
           <td>
-            <button class="row-block-btn" type="button" id="btn-run-${sim.id}" style="padding:4px 12px; font-size:11px;" onclick="window.couraaRunSimulation('${sim.id}')">
+            <button class="row-block-btn" type="button" id="btn-run-${sim.id}" style="padding:4px 12px; font-size:11px;" onclick="window.astralockRunSimulation('${sim.id}')">
               <i class="fa-solid fa-bullseye"></i> Launch Attack
             </button>
           </td>
@@ -1186,7 +1187,7 @@
             </div>
           </td>
           <td>
-            <button class="row-block-btn ${isIsolated ? 'blocked-done' : ''}" type="button" style="padding:4px 10px; font-size:11px;" onclick="window.couraaEndpointAction('${ep.hostname}', '${ep.ip}')">
+            <button class="row-block-btn ${isIsolated ? 'blocked-done' : ''}" type="button" style="padding:4px 10px; font-size:11px;" onclick="window.astralockEndpointAction('${ep.hostname}', '${ep.ip}')">
               ${isIsolated ? '<i class="fa-solid fa-lock"></i> Isolated' : '<i class="fa-solid fa-shield"></i> Isolate'}
             </button>
           </td>
@@ -1256,7 +1257,7 @@
           <td><span class="signature-chip">${tpl.schedule}</span></td>
           <td><span class="badge-classification anomalous" style="font-size:10px;">${tpl.format}</span></td>
           <td>
-            <button class="row-block-btn" type="button" id="btn-rep-${tpl.id}" style="padding:4px 12px; font-size:11px;" onclick="window.couraaGenerateReport('${tpl.id}', '${tpl.title}')">
+            <button class="row-block-btn" type="button" id="btn-rep-${tpl.id}" style="padding:4px 12px; font-size:11px;" onclick="window.astralockGenerateReport('${tpl.id}', '${tpl.title}')">
               <i class="fa-solid fa-download"></i> Generate
             </button>
           </td>
@@ -1328,7 +1329,7 @@
   // ==========================================================================
   // GLOBAL INTERACTIVE CALLBACKS
   // ==========================================================================
-  window.couraaRunSimulation = async function(simId) {
+  window.astralockRunSimulation = window.couraaRunSimulation = async function(simId) {
     const btn = document.querySelector(`#btn-run-${simId}`);
     const origHtml = btn ? btn.innerHTML : "";
     if (btn) {
@@ -1355,7 +1356,7 @@
     }
   };
 
-  window.couraaGenerateReport = async function(templateId, title) {
+  window.astralockGenerateReport = window.couraaGenerateReport = async function(templateId, title) {
     const btn = document.querySelector(`#btn-rep-${templateId}`);
     const origHtml = btn ? btn.innerHTML : "";
     if (btn) {
@@ -1382,15 +1383,15 @@
     }
   };
 
-  window.couraaAssetAction = function(hostname, ip) {
+  window.astralockAssetAction = window.couraaAssetAction = function(hostname, ip) {
     openBlockModal(ip);
   };
 
-  window.couraaEndpointAction = function(hostname, ip) {
+  window.astralockEndpointAction = window.couraaEndpointAction = function(hostname, ip) {
     openBlockModal(ip);
   };
 
-  window.couraaTriggerSoarPlaybook = async function(id, name) {
+  window.astralockTriggerSoarPlaybook = window.couraaTriggerSoarPlaybook = async function(id, name) {
     state.currentPlaybook = {
       id: id,
       name: name,
@@ -1400,7 +1401,7 @@
     await executePlaybook();
   };
 
-  window.couraaAskGeminiIntel = function(indicator, category, asn) {
+  window.astralockAskGeminiIntel = window.couraaAskGeminiIntel = function(indicator, category, asn) {
     switchView("ai-analyst");
     const prompt = `Perform IOC threat attribution on ${indicator} (${category}, ASN: ${asn}). Detail threat actors, attack infrastructure, and mitigation tactics.`;
     if (els.aiInput) els.aiInput.value = prompt;
@@ -1849,7 +1850,7 @@
     async function syncGeminiStatus() {
       try {
         const res = await apiRequest("/api/ai-analyst/gemini-config");
-        const storedKey = sessionStorage.getItem("couraa-gemini-key") || "";
+        const storedKey = sessionStorage.getItem("astralock-gemini-key") || sessionStorage.getItem("couraa-gemini-key") || "";
         const isConfigured = res.configured || !!storedKey;
 
         if (geminiBtn && geminiStatusText) {
@@ -1871,7 +1872,7 @@
             if (disconnectGeminiBtn) disconnectGeminiBtn.style.display = "inline-flex";
           } else {
             geminiStatusDot.className = "status-indicator-dot";
-            geminiStatusPrimary.textContent = "Engine: COURAA Local Rule Engine";
+            geminiStatusPrimary.textContent = "Engine: ASTRALOCK Local Rule Engine";
             geminiStatusSecondary.textContent = "Connect Gemini API key to activate cloud LLM reasoning";
             if (disconnectGeminiBtn) disconnectGeminiBtn.style.display = "none";
           }
@@ -1901,7 +1902,7 @@
         geminiFeedbackMsg.textContent = "";
         geminiFeedbackMsg.className = "dialog-feedback-msg";
       }
-      const storedKey = sessionStorage.getItem("couraa-gemini-key") || "";
+      const storedKey = sessionStorage.getItem("astralock-gemini-key") || sessionStorage.getItem("couraa-gemini-key") || "";
       if (geminiKeyInput && storedKey) geminiKeyInput.value = storedKey;
       syncGeminiStatus();
       geminiDialog.showModal();
@@ -1929,7 +1930,7 @@
 
     if (testGeminiBtn) {
       testGeminiBtn.addEventListener("click", async () => {
-        const key = (geminiKeyInput ? geminiKeyInput.value.trim() : "") || sessionStorage.getItem("couraa-gemini-key") || "";
+        const key = (geminiKeyInput ? geminiKeyInput.value.trim() : "") || sessionStorage.getItem("astralock-gemini-key") || sessionStorage.getItem("couraa-gemini-key") || "";
         const model = (geminiModelSelect ? geminiModelSelect.value : "auto");
         if (!key) {
           if (geminiFeedbackMsg) {
@@ -2004,6 +2005,7 @@
           saveGeminiBtn.disabled = false;
 
           if (res.success) {
+            sessionStorage.setItem("astralock-gemini-key", key);
             sessionStorage.setItem("couraa-gemini-key", key);
             syncGeminiStatus();
             showToast(`Google Gemini Connected (${res.model || model})!`);
@@ -2027,6 +2029,7 @@
 
     if (disconnectGeminiBtn) {
       disconnectGeminiBtn.addEventListener("click", async () => {
+        sessionStorage.removeItem("astralock-gemini-key");
         sessionStorage.removeItem("couraa-gemini-key");
         if (geminiKeyInput) geminiKeyInput.value = "";
         try {
@@ -2113,7 +2116,7 @@
           const url = URL.createObjectURL(blob);
           const a = document.createElement("a");
           a.href = url;
-          a.download = `couraa-compliance-audit-evidence-${new Date().toISOString().split("T")[0]}.json`;
+          a.download = `astralock-compliance-audit-evidence-${new Date().toISOString().split("T")[0]}.json`;
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);

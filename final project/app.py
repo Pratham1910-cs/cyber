@@ -1118,7 +1118,7 @@ def call_gemini_api(prompt, system_context="", api_key="", preferred_model=None)
             models_to_try.append(fb)
 
     sys_prompt = (
-        "You are COURAA Copilot, an elite Autonomous SOC Cyber Defense AI assistant. "
+        "You are ASTRALOCK Copilot, an elite Autonomous SOC Cyber Defense AI assistant. "
         "You converse with the security analyst with professional authority, high technical precision, and actionable recommendations. "
         "Analyze threat telemetry, MITRE ATT&CK techniques, forensic attribution, and advise on containment and response. "
         "Keep answers focused, high-impact, and directly helpful for SOC investigation and triage."
@@ -1257,7 +1257,7 @@ def ai_analyst_chat():
     client_api_key = str(payload.get("api_key", "")).strip()
 
     if not message:
-        return jsonify({"reply": "Hello! I am COURAA Copilot. How can I assist your investigation today?"}), 200
+        return jsonify({"reply": "Hello! I am ASTRALOCK Copilot. How can I assist your investigation today?"}), 200
 
     msg_lower = message.lower()
 
@@ -1273,7 +1273,7 @@ def ai_analyst_chat():
             return jsonify({
                 "type": "system",
                 "update_workspace": False,
-                "reply": "✔ <b>Google Gemini API Key Configured!</b><br><br>Live Generative AI pipeline is now ACTIVE for COURAA Copilot. All future chat inquiries will leverage real-time Gemini LLM reasoning alongside local SOC telemetry.",
+                "reply": "✔ <b>Google Gemini API Key Configured!</b><br><br>Live Generative AI pipeline is now ACTIVE for ASTRALOCK Copilot. All future chat inquiries will leverage real-time Gemini LLM reasoning alongside local SOC telemetry.",
                 "key_findings": ["LLM Provider: Google Gemini (Active)", "SOC Context Integration: Enabled"]
             })
 
@@ -1378,7 +1378,7 @@ def ai_analyst_chat():
         return jsonify({
             "type": "greeting",
             "update_workspace": False,
-            "reply": "<b>Hello Analyst! I'm COURAA Copilot</b>, your Autonomous SOC Cyber Defense assistant.<br><br>"
+            "reply": "<b>Hello Analyst! I'm ASTRALOCK Copilot</b>, your Autonomous SOC Cyber Defense assistant.<br><br>"
                      "I am actively monitoring authentication streams, edge firewall perimeters, and internal endpoint telemetry.<br><br>"
                      "<b>How I can assist your investigation:</b><br>"
                      "• <b>Threat Queries</b>: Try asking <i>\"Find lateral movement from Laptop-352\"</i> or <i>\"Summarize active critical incidents\"</i>.<br>"
@@ -1387,7 +1387,7 @@ def ai_analyst_chat():
                      "• <b>Security Hardening</b>: Ask how to protect against brute-force attacks or harden Linux SSH bastions.<br>"
                      "• <b>Connect Live LLM</b>: You can also connect Google Gemini by saying <i>\"set gemini key YOUR_API_KEY\"</i>.",
             "key_findings": [
-                "COURAA Autonomous Defense Engine: ACTIVE",
+                "ASTRALOCK Autonomous Defense Engine: ACTIVE",
                 f"Current workspace context: {active_prompt or 'Failed Administrative Logins'}"
             ]
         })
@@ -1397,7 +1397,7 @@ def ai_analyst_chat():
         return jsonify({
             "type": "capabilities",
             "update_workspace": False,
-            "reply": "<b>COURAA Copilot Capabilities Overview</b>:<br><br>"
+            "reply": "<b>ASTRALOCK Copilot Capabilities Overview</b>:<br><br>"
                      "I am an Autonomous Cyber Defense Agent engineered for SOC Tier-1 and Tier-2 triage:<br><br>"
                      "1. <b>SPL Query Generation & Execution</b>: Converts natural language security inquiries into Splunk/SIEM SPL queries with real-time visualization.<br>"
                      "2. <b>SSH Brute-Force & Anomaly Detection</b>: Employs an Isolation Forest & Random Forest ML pipeline to score login telemetry with 99.2% accuracy.<br>"
@@ -1496,7 +1496,7 @@ def ai_analyst_chat():
                      "3. <code>administrator</code>: 186 attempts (originating from AS14061 DigitalOcean)<br>"
                      "4. <code>db_admin</code>: 86 attempts (originating from AS20940 Akamai)<br>"
                      "5. <code>svc_backup</code>: 42 internal attempts (Sysmon Lateral Movement on DC-01)<br><br>"
-                     "<b>Policy Recommendation</b>: Enforce <code>PermitRootLogin no</code> in <code>/etc/ssh/sshd_config</code>, deploy SSH public key authentication only, and mandate fail2ban/COURAA real-time rate limiting.",
+                     "<b>Policy Recommendation</b>: Enforce <code>PermitRootLogin no</code> in <code>/etc/ssh/sshd_config</code>, deploy SSH public key authentication only, and mandate fail2ban/ASTRALOCK real-time rate limiting.",
             "key_findings": [
                 "Over 78% of login failures targeted generic privileged usernames ('admin', 'root').",
                 "No accounts were breached; all attempts resulted in PAM auth failures."
@@ -1532,7 +1532,7 @@ def ai_analyst_chat():
         return jsonify({
             "type": "explanation",
             "update_workspace": False,
-            "reply": "<b>COURAA Machine Learning Threat Detection Architecture</b>:<br><br>"
+            "reply": "<b>ASTRALOCK Machine Learning Threat Detection Architecture</b>:<br><br>"
                      "• <b>Behavioral Feature Engine</b>: Extracts 7 dimensions per IP window (failure count, failure ratio, velocity events/sec, off-hours deviation, username entropy, unique port access, burst duration).<br>"
                      "• <b>Dual-Model Pipeline</b>:<br>"
                      "  1. <b>Isolation Forest</b>: Computes unsupervised anomaly scores for zero-day/novel spraying behaviors.<br>"
@@ -1554,7 +1554,7 @@ def ai_analyst_chat():
     return jsonify({
         "type": "general",
         "update_workspace": False,
-        "reply": f"<b>COURAA Copilot Intelligence Assessment</b>:<br><br>"
+        "reply": f"<b>ASTRALOCK Copilot Intelligence Assessment</b>:<br><br>"
                  f"I've analyzed your question: <i>\"{message}\"</i>.{live_ctx}<br><br>"
                  f"From an SOC perspective, here are the core findings and recommendations:<br>"
                  f"• <b>Threat Surface</b>: Active login brute-force attacks and internal anomalous propagation vectors are actively monitored.<br>"
@@ -1862,7 +1862,7 @@ def run_simulation():
         "status": "success",
         "sim_id": sim_id,
         "timestamp": now,
-        "message": f"Simulation {sim_id} initiated. Synthetic threat telemetry ingested. COURAA ML model flagged attack with 97.4% confidence and auto-defended.",
+        "message": f"Simulation {sim_id} initiated. Synthetic threat telemetry ingested. ASTRALOCK ML model flagged attack with 97.4% confidence and auto-defended.",
         "detection_latency_ms": random.randint(120, 380)
     })
 
@@ -1921,7 +1921,7 @@ def get_compliance():
         ],
         "controls": [
             {"code": "CC6.1", "framework": "SOC 2", "desc": "Logical access controls protect sensitive systems against brute-force attacks.", "evidence": "Automated firewall DROP rules deployed in <20s. Zero breach events.", "status": "PASS"},
-            {"code": "CC7.2", "framework": "SOC 2", "desc": "System monitors anomalous behavior and unauthorized access attempts.", "evidence": "COURAA ML model actively scores SSH auth logs with 96% accuracy.", "status": "PASS"},
+            {"code": "CC7.2", "framework": "SOC 2", "desc": "System monitors anomalous behavior and unauthorized access attempts.", "evidence": "ASTRALOCK ML model actively scores SSH auth logs with 96% accuracy.", "status": "PASS"},
             {"code": "Req 10.2", "framework": "PCI-DSS", "desc": "Automated audit trails record all individual user access to cardholder data.", "evidence": "Centralized auth.log parsing enabled. SQLite audit trail active.", "status": "PASS"},
             {"code": "CIS 5.2.3", "framework": "CIS Linux", "desc": "Ensure SSH PermitRootLogin is disabled.", "evidence": "PermitRootLogin configured as 'no' on all perimeter bastion gateways.", "status": "PASS"},
             {"code": "A.12.4.1", "framework": "ISO 27001", "desc": "Event logging produces audit records that identify security events.", "evidence": "Real-time threat feeds and ML feature store active.", "status": "PASS"}
@@ -1969,7 +1969,7 @@ def get_reports():
             }
         ],
         "generated_reports": [
-            {"title": "Weekly Threat Brief (Week 43)", "date": "2026-10-25", "author": "COURAA AI Copilot", "size": "1.4 MB", "status": "Ready"},
+            {"title": "Weekly Threat Brief (Week 43)", "date": "2026-10-25", "author": "ASTRALOCK AI Copilot", "size": "1.4 MB", "status": "Ready"},
             {"title": "Incident Dossier: AS48282 Selectel Attack", "date": "2026-10-25", "author": "Automated Investigation", "size": "840 KB", "status": "Ready"},
             {"title": "SOC 2 Evidence Package Q3", "date": "2026-10-20", "author": "Compliance Engine", "size": "3.8 MB", "status": "Ready"}
         ]
@@ -1985,7 +1985,7 @@ def generate_report():
     return jsonify({
         "status": "success",
         "template_id": template_id,
-        "title": f"COURAA Generated Security Report ({template_id.upper()})",
+        "title": f"ASTRALOCK Generated Security Report ({template_id.upper()})",
         "timestamp": now,
         "download_url": f"/api/reports/download/{template_id}.pdf",
         "message": f"Successfully generated report '{template_id}'. Summary compiled with live telemetry from 1,244 authentication events."
