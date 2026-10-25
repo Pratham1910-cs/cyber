@@ -1,0 +1,1230 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#090a0d">
+  <title>COURAA | Autonomous Cyber Defense System</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="/style.css">
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.7/dist/chart.umd.min.js" defer></script>
+  <script src="/app.js" defer></script>
+</head>
+<body class="couraa-dark">
+  <div class="couraa-layout">
+    <!-- TOP NAVIGATION BAR -->
+    <header class="couraa-topbar" id="couraa-topbar">
+      <div class="topbar-left">
+        <a href="#ai-analyst" class="brand-link" id="brand-link">
+          <div class="brand-logo-wrap">
+            <svg class="brand-logo-svg" viewBox="0 0 34 26" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="13" r="8" stroke="#ff5520" stroke-width="3" stroke-linecap="round"/>
+              <circle cx="23" cy="13" r="8" stroke="#ff5520" stroke-width="3" stroke-linecap="round"/>
+              <path d="M12 5.5 C16.5 5.5, 17.5 20.5, 22 20.5" stroke="#ff7849" stroke-width="3" stroke-linecap="round"/>
+            </svg>
+          </div>
+          <div class="brand-text">
+            <span class="brand-title">COURAA</span>
+            <span class="brand-subtitle">AUTONOMOUS CYBER DEFENSE SYSTEM</span>
+          </div>
+        </a>
+
+        <div class="topbar-divider"></div>
+
+        <div class="copilot-badge">
+          <span class="copilot-sparkle">✦</span>
+          <span class="copilot-title">COURAA Copilot</span>
+        </div>
+
+        <button id="gemini-key-btn" class="topbar-btn gemini-pill-btn" type="button" title="Configure Live Google Gemini AI Key">
+          <i class="fa-solid fa-microchip"></i>
+          <span id="gemini-status-text">Connect Gemini AI</span>
+        </button>
+      </div>
+
+      <div class="topbar-center" style="position: relative;">
+        <div class="global-search-box">
+          <i class="fa-solid fa-magnifying-glass search-icon"></i>
+          <input type="text" id="global-search" placeholder="Search COURAA (IPs, hosts, playbooks, MITRE tactics)..." autocomplete="off">
+          <span class="search-shortcut">Ctrl K</span>
+        </div>
+        <!-- GLOBAL SEARCH RESULTS POPUP -->
+        <div id="search-results-dropdown" class="search-results-menu" style="display: none;">
+          <div class="search-results-content" id="search-results-content">
+            <!-- Dynamic search results populated by app.js -->
+          </div>
+        </div>
+      </div>
+
+      <div class="topbar-right" style="position: relative;">
+        <input id="hidden-file-input" type="file" accept=".log,.txt,text/plain" hidden>
+        <button id="topbar-upload-btn" class="topbar-btn upload-pill-btn" type="button" title="Upload auth.log for AI analysis">
+          <i class="fa-solid fa-arrow-up-from-bracket"></i>
+          <span>Upload Log</span>
+        </button>
+
+        <button id="notifications-btn" class="topbar-icon-btn notifications-btn" type="button" aria-label="Notifications" title="System alerts">
+          <i class="fa-regular fa-bell"></i>
+          <span class="alert-indicator-dot" id="notifications-indicator-dot"></span>
+        </button>
+
+        <!-- NOTIFICATIONS DROPDOWN PANEL -->
+        <div id="notifications-dropdown" class="notifications-dropdown-menu" style="display: none;">
+          <div class="notif-header">
+            <div class="notif-header-title">
+              <span>Security Notifications</span>
+              <span class="notif-badge" id="notif-unread-count">4 New</span>
+            </div>
+            <div class="notif-header-actions">
+              <button type="button" id="mark-all-read-btn" class="notif-action-btn">Mark all read</button>
+            </div>
+          </div>
+          <div class="notif-list" id="notif-items-list">
+            <!-- Dynamic Notification Items populated by app.js -->
+          </div>
+          <div class="notif-footer">
+            <button type="button" class="notif-footer-link" id="notif-view-all-alerts-btn">
+              View All 1,244 Detections in Alerts Feed <i class="fa-solid fa-arrow-right"></i>
+            </button>
+          </div>
+        </div>
+
+        <div class="user-pill" title="Active Analyst: analyst@couraa.com">
+          <div class="user-avatar-amber">AN</div>
+          <span class="locale-tag">EN</span>
+        </div>
+      </div>
+    </header>
+
+    <div class="couraa-body">
+      <!-- LEFT SIDEBAR NAVIGATION -->
+      <aside class="couraa-sidebar" id="couraa-sidebar">
+        <nav class="sidebar-nav">
+          <ul class="nav-list">
+            <li class="nav-item">
+              <button class="nav-btn" data-view="dashboard" type="button">
+                <i class="fa-solid fa-table-columns nav-icon"></i>
+                <span class="nav-label">Dashboard</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="log-explorer" type="button">
+                <i class="fa-solid fa-file-waveform nav-icon"></i>
+                <span class="nav-label">Log Explorer</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="correlation" type="button">
+                <i class="fa-solid fa-diagram-project nav-icon"></i>
+                <span class="nav-label">Correlation</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="alerts" type="button">
+                <i class="fa-solid fa-triangle-exclamation nav-icon"></i>
+                <span class="nav-label">Alerts</span>
+                <span class="nav-counter" id="nav-alerts-badge">12</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="assets" type="button">
+                <i class="fa-solid fa-server nav-icon"></i>
+                <span class="nav-label">Assets</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="threat-intel" type="button">
+                <i class="fa-solid fa-earth-americas nav-icon"></i>
+                <span class="nav-label">Threat Intel</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="soar" type="button">
+                <i class="fa-solid fa-bolt nav-icon"></i>
+                <span class="nav-label">SOAR</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="red-team" type="button">
+                <i class="fa-solid fa-user-secret nav-icon"></i>
+                <span class="nav-label">Red Team</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="endpoints" type="button">
+                <i class="fa-solid fa-laptop nav-icon"></i>
+                <span class="nav-label">Endpoints</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="compliance" type="button">
+                <i class="fa-solid fa-clipboard-check nav-icon"></i>
+                <span class="nav-label">Compliance</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="reports" type="button">
+                <i class="fa-solid fa-chart-pie nav-icon"></i>
+                <span class="nav-label">Reports</span>
+              </button>
+            </li>
+            <li class="nav-item active">
+              <button class="nav-btn active" data-view="ai-analyst" type="button">
+                <span class="ai-sparkle-icon">✦</span>
+                <span class="nav-label">AI Analyst</span>
+              </button>
+            </li>
+            <li class="nav-item">
+              <button class="nav-btn" data-view="settings" type="button">
+                <i class="fa-solid fa-gear nav-icon"></i>
+                <span class="nav-label">Settings</span>
+              </button>
+            </li>
+          </ul>
+        </nav>
+
+        <div class="sidebar-footer">
+          <div class="analyst-profile-card">
+            <div class="profile-avatar-ai">AI</div>
+            <div class="profile-meta">
+              <div class="profile-email">analyst@couraa.com</div>
+              <div class="profile-status"><span class="status-dot-green"></span>Active SOC Node</div>
+            </div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- MAIN CONTENT VIEWPORT -->
+      <main class="couraa-main" id="couraa-main">
+        
+        <!-- ============================================================== -->
+        <!-- VIEW 1: AI ANALYST (EXACT MATCH TO PHOTO)                       -->
+        <!-- ============================================================== -->
+        <section id="view-ai-analyst" class="view-panel active">
+          <!-- TOP AI COPILOT PROMPT CARD -->
+          <div class="ai-copilot-card">
+            <div class="prompt-input-row">
+              <div class="prompt-sparkle-badge">✦</div>
+              <input 
+                type="text" 
+                id="ai-analyst-input" 
+                class="ai-analyst-input"
+                value="Show me failed administrative logins over the last 24 hours grouped by country"
+                placeholder="Ask COURAA Copilot a security question or describe an investigation..."
+                autocomplete="off"
+              >
+              <button id="ai-generate-btn" class="ai-generate-btn" type="button">
+                <span>Generate</span>
+              </button>
+            </div>
+
+            <!-- PROMPT SUGGESTION PILLS -->
+            <div class="prompt-pills-row">
+              <button class="prompt-pill" type="button" data-prompt="Find lateral movement from Laptop-352">
+                Find lateral movement from Laptop-352
+              </button>
+              <button class="prompt-pill" type="button" data-prompt="Summarize active critical incidents">
+                Summarize active critical incidents
+              </button>
+              <button class="prompt-pill" type="button" data-prompt="Extract IOCs from recent Palo Alto logs">
+                Extract IOCs from recent Palo Alto logs
+              </button>
+              <button class="prompt-pill live-auth-pill" type="button" data-prompt="Analyze active SSH brute-force detections from auth.log">
+                <i class="fa-solid fa-shield-halved"></i> Analyze SSH auth.log brute-force
+              </button>
+            </div>
+
+            <!-- SPL QUERY SYNTAX CODE BAR -->
+            <div class="spl-query-bar">
+              <div class="spl-meta">
+                <span class="spl-label">Search executed in:</span>
+                <span class="spl-time" id="spl-execution-time">142ms</span>
+              </div>
+              <div class="spl-code-box">
+                <code id="spl-code-display"><span class="spl-idx">index=auth</span> <span class="spl-prop">action="failure"</span> <span class="spl-prop">user_role="admin"</span> <span class="spl-pipe">|</span> <span class="spl-fn">stats count by geo_country</span> <span class="spl-pipe">|</span> <span class="spl-fn">sort -count</span> <span class="spl-pipe">|</span> <span class="spl-fn">head 10</span></code>
+                <button id="copy-spl-btn" class="copy-spl-btn" type="button" title="Copy SPL Query">
+                  <i class="fa-regular fa-copy"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- TWO-COLUMN WORKSPACE: QUERY RESULTS & INSIGHT & INVESTIGATION -->
+          <div class="ai-two-column-grid">
+            
+            <!-- LEFT COLUMN: QUERY RESULTS (1,244 EVENTS) -->
+            <div class="ai-card results-card">
+              <div class="card-header">
+                <div class="header-left">
+                  <h2 class="card-title" id="results-count-title">Query Results (1,244 events)</h2>
+                </div>
+                <div class="header-right">
+                  <button class="card-action-btn-gemini" id="gemini-deep-triage-btn" type="button" title="Deep Attack Triage with Google Gemini">
+                    <i class="fa-solid fa-sparkles"></i>
+                    <span>✦ Gemini Deep Triage</span>
+                  </button>
+                  <div class="timeframe-select-pill">
+                    <span id="active-timeframe-label">Last 24 hours</span>
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </div>
+                  <button class="card-action-btn" id="refresh-query-btn" type="button" title="Refresh Query">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                  </button>
+                </div>
+              </div>
+
+              <!-- BAR CHART SECTION -->
+              <div class="chart-container-couraa">
+                <canvas id="couraa-bar-chart" aria-label="Failed logins by country bar chart"></canvas>
+              </div>
+
+              <!-- DATA TABLE SECTION -->
+              <div class="table-container-couraa">
+                <table class="couraa-table" id="results-data-table">
+                  <thead>
+                    <tr>
+                      <th class="th-geo">GEO / COUNTRY</th>
+                      <th class="th-count">COUNT</th>
+                      <th class="th-pct">% OF TOTAL</th>
+                      <th class="th-user">TOP USER TARGETED</th>
+                      <th class="th-action">ACTIONS</th>
+                    </tr>
+                  </thead>
+                  <tbody id="results-table-body">
+                    <tr>
+                      <td class="td-geo"><span class="geo-code-badge">RU</span> Russia (RU)</td>
+                      <td class="td-count count-crimson">942</td>
+                      <td class="td-pct">43.5%</td>
+                      <td class="td-user">admin</td>
+                      <td class="td-action">
+                        <button class="row-block-btn" data-ip="185.190.141.22" data-target="Russia (RU) - AS48282" type="button">Block</button>
+                        <button class="row-gemini-btn" data-geo="Russia (RU)" data-ip="185.190.141.22" data-user="admin" data-count="942" type="button" title="Ask Gemini AI to triage this event">✦ Ask Gemini</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="td-geo"><span class="geo-code-badge">CN</span> China (CN)</td>
+                      <td class="td-count count-crimson">418</td>
+                      <td class="td-pct">12.9%</td>
+                      <td class="td-user">root</td>
+                      <td class="td-action">
+                        <button class="row-block-btn" data-ip="218.92.0.182" data-target="China (CN) - AS4134" type="button">Block</button>
+                        <button class="row-gemini-btn" data-geo="China (CN)" data-ip="218.92.0.182" data-user="root" data-count="418" type="button" title="Ask Gemini AI to triage this event">✦ Ask Gemini</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="td-geo"><span class="geo-code-badge">US</span> United States (US)</td>
+                      <td class="td-count count-crimson">186</td>
+                      <td class="td-pct">12.5%</td>
+                      <td class="td-user">administrator</td>
+                      <td class="td-action">
+                        <button class="row-block-btn" data-ip="198.51.100.45" data-target="United States (US) - AS14061" type="button">Block</button>
+                        <button class="row-gemini-btn" data-geo="United States (US)" data-ip="198.51.100.45" data-user="administrator" data-count="186" type="button" title="Ask Gemini AI to triage this event">✦ Ask Gemini</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="td-geo"><span class="geo-code-badge">GB</span> United Kingdom (GB)</td>
+                      <td class="td-count count-crimson">86</td>
+                      <td class="td-pct">6.7%</td>
+                      <td class="td-user">db_admin</td>
+                      <td class="td-action">
+                        <button class="row-block-btn" data-ip="185.220.101.5" data-target="United Kingdom (GB) - AS20940" type="button">Block</button>
+                        <button class="row-gemini-btn" data-geo="United Kingdom (GB)" data-ip="185.220.101.5" data-user="db_admin" data-count="86" type="button" title="Ask Gemini AI to triage this event">✦ Ask Gemini</button>
+                      </td>
+                    </tr>
+                    <tr>
+                      <td class="td-geo"><span class="geo-code-badge">IR</span> Iran (IR)</td>
+                      <td class="td-count count-crimson">52</td>
+                      <td class="td-pct">4.1%</td>
+                      <td class="td-user">admin</td>
+                      <td class="td-action">
+                        <button class="row-block-btn" data-ip="5.160.245.10" data-target="Iran (IR) - AS44244" type="button">Block</button>
+                        <button class="row-gemini-btn" data-geo="Iran (IR)" data-ip="5.160.245.10" data-user="admin" data-count="52" type="button" title="Ask Gemini AI to triage this event">✦ Ask Gemini</button>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- RIGHT COLUMN: INSIGHT & INVESTIGATION (CHAT COPILOT) -->
+            <div class="ai-card insight-card">
+              <div class="card-header">
+                <div class="header-left">
+                  <span class="insight-sparkle">✦</span>
+                  <h2 class="card-title">Insight &amp; Investigation</h2>
+                </div>
+                <div class="header-right">
+                  <span class="copilot-status-badge"><span class="pulse-dot"></span>ACTIVE</span>
+                </div>
+              </div>
+
+              <!-- CHAT STREAM -->
+              <div class="chat-thread-container" id="chat-thread-container">
+                <!-- User message -->
+                <div class="chat-message user-message" id="initial-user-msg">
+                  <div class="user-bubble">
+                    <p class="user-query-text" id="chat-user-query-text">Show me failed administrative logins over the last 24 hours grouped by country.</p>
+                  </div>
+                  <div class="chat-avatar user-avatar-badge">AD</div>
+                </div>
+
+                <!-- AI message -->
+                <div class="chat-message ai-message" id="initial-ai-msg">
+                  <div class="ai-avatar-red">AI</div>
+                  <div class="ai-bubble">
+                    <p class="ai-summary-text" id="ai-summary-text">I've converted your request into SPL and run the query.</p>
+                    
+                    <div class="ai-findings-block">
+                      <div class="findings-heading">Key Findings:</div>
+                      <ul class="findings-list" id="ai-findings-list">
+                        <li>A total of 1,244 failed admin logins occurred. The vast majority originated from Russia (43.5%) and China (12.9%).</li>
+                        <li>This high volume of failures directed at 'admin' and 'root' accounts strongly suggests an automated brute-force or password spraying attack originating from these regions.</li>
+                      </ul>
+                    </div>
+
+                    <div class="ai-action-recommendation">
+                      <p class="recommendation-text" id="ai-recommendation-text">Would you like me to block these top 5 ASN ranges on the edge firewall?</p>
+                      <button id="run-playbook-btn" class="run-playbook-btn" type="button">
+                        <i class="fa-solid fa-play"></i>
+                        <span id="playbook-btn-label">Run block_perimeter Playbook</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <!-- FOLLOW-UP CHAT INPUT -->
+              <div class="chat-followup-box">
+                <input 
+                  type="text" 
+                  id="chat-followup-input" 
+                  class="chat-followup-input" 
+                  placeholder="Ask AI Analyst a follow-up..."
+                  autocomplete="off"
+                >
+                <button id="chat-send-btn" class="chat-send-btn" type="button" aria-label="Send follow-up">
+                  <i class="fa-solid fa-paper-plane"></i>
+                </button>
+              </div>
+            </div>
+
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 2: ALERTS (SSH THREAT DETECTIONS FEED)                     -->
+        <!-- ============================================================== -->
+        <section id="view-alerts" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">DETECTION ENGINE &bull; REAL-TIME FEED</p>
+              <h2 class="view-title">Active Security Alerts</h2>
+            </div>
+            <div class="alert-filter-toolbar">
+              <div class="filter-pill-group">
+                <button class="filter-btn active" data-alert-filter="all" type="button">All Alerts</button>
+                <button class="filter-btn" data-alert-filter="Brute-Force Attack" type="button">Brute-Force Attacks</button>
+                <button class="filter-btn" data-alert-filter="Anomalous Login" type="button">Anomalous Logins</button>
+              </div>
+              <button id="refresh-alerts-btn" class="toolbar-btn" type="button" title="Refresh alerts">
+                <i class="fa-solid fa-arrows-rotate"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="ai-card alerts-table-card">
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>TIMESTAMP</th>
+                    <th>SOURCE IP</th>
+                    <th>ATTEMPTS</th>
+                    <th>ANOMALOUS SIGNATURES</th>
+                    <th>RISK SCORE</th>
+                    <th>CLASSIFICATION</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="alerts-table-body">
+                  <tr><td colspan="7" class="loading-state">Loading detection feed...</td></tr>
+                </tbody>
+              </table>
+            </div>
+            <div class="card-footer-bar">
+              <span id="alerts-count-text">0 detection events</span>
+              <span class="engine-live-tag"><span class="pulse-dot"></span>ML DETECTION ENGINE RUNNING</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 3: DASHBOARD (METRICS & TIMELINE)                          -->
+        <!-- ============================================================== -->
+        <section id="view-dashboard" class="view-panel">
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">TOTAL SSH ATTEMPTS</span><i class="fa-solid fa-wave-square metric-icon blue"></i></div>
+              <div class="metric-number" id="dash-total-attempts">1,480</div>
+              <div class="metric-sub">Across processed authentication logs</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">FAILED LOGINS</span><i class="fa-solid fa-arrow-trend-up metric-icon orange"></i></div>
+              <div class="metric-number text-orange" id="dash-failed-logins">1,244</div>
+              <div class="metric-sub">84.1% failure ratio</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">DETECTED ATTACKERS</span><i class="fa-solid fa-crosshairs metric-icon red"></i></div>
+              <div class="metric-number text-crimson" id="dash-detected-attacks">5</div>
+              <div class="metric-sub">Confirmed brute-force clusters</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">CRITICAL SEV-1 ALERTS</span><i class="fa-solid fa-triangle-exclamation metric-icon red"></i></div>
+              <div class="metric-number text-crimson" id="dash-critical-alerts">3</div>
+              <div class="metric-sub">Risk score &ge; 90%</div>
+            </div>
+          </div>
+
+          <div class="ai-two-column-grid" style="margin-top: 18px;">
+            <div class="ai-card">
+              <div class="card-header">
+                <h2 class="card-title">Authentication Activity Over Time</h2>
+                <div class="chart-legend-couraa">
+                  <span class="legend-dot-item"><span class="dot-red"></span>Failed</span>
+                  <span class="legend-dot-item"><span class="dot-green"></span>Success</span>
+                </div>
+              </div>
+              <div class="chart-container-couraa" style="height: 280px;">
+                <canvas id="timeline-chart"></canvas>
+              </div>
+            </div>
+
+            <div class="ai-card">
+              <div class="card-header">
+                <h2 class="card-title">Top Attacking IP Addresses</h2>
+                <span class="card-badge">RANKED BY VOLUME</span>
+              </div>
+              <div class="chart-container-couraa" style="height: 280px;">
+                <canvas id="attacker-chart"></canvas>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 4: LOG EXPLORER (AUTH.LOG UPLOADER & PARSER)               -->
+        <!-- ============================================================== -->
+        <section id="view-log-explorer" class="view-panel">
+          <div class="ai-card log-uploader-card">
+            <div class="uploader-header">
+              <div class="uploader-icon-wrap"><i class="fa-solid fa-file-shield"></i></div>
+              <div>
+                <h2>Ingest &amp; Analyze Linux auth.log</h2>
+                <p>Upload raw syslog files for feature engineering and machine learning threat detection.</p>
+              </div>
+            </div>
+
+            <div class="upload-dropzone" id="upload-dropzone">
+              <i class="fa-solid fa-cloud-arrow-up dropzone-icon"></i>
+              <div class="dropzone-text">
+                <b>Drag and drop your auth.log here</b>, or <span class="browse-link" id="browse-file-btn">browse file</span>
+              </div>
+              <div class="dropzone-hint">Supports syslog standard formats, /var/log/auth.log, and secure logs.</div>
+            </div>
+
+            <div class="upload-progress-box" id="upload-progress-box" style="display: none;">
+              <div class="progress-bar-wrap">
+                <div class="progress-bar-fill" id="upload-progress-fill"></div>
+              </div>
+              <div class="progress-label" id="upload-status-label">Parsing events &amp; running ML detector...</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 5: CORRELATION (MULTI-STAGE ATTACK KILL CHAIN)             -->
+        <!-- ============================================================== -->
+        <section id="view-correlation" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">GRAPH CORRELATION ENGINE &bull; KILL CHAIN</p>
+              <h2 class="view-title">Multi-Stage Attack Correlation</h2>
+            </div>
+            <button class="card-action-btn-gemini" id="gemini-correlation-btn" type="button">
+              <i class="fa-solid fa-sparkles"></i> ✦ Gemini Kill Chain Triage
+            </button>
+          </div>
+
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">CORRELATED CHAINS</span><i class="fa-solid fa-diagram-project metric-icon red"></i></div>
+              <div class="metric-number text-crimson">3</div>
+              <div class="metric-sub">1 High-Priority Lateral Movement</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">CORRELATED EVENTS</span><i class="fa-solid fa-link metric-icon blue"></i></div>
+              <div class="metric-number">1,842</div>
+              <div class="metric-sub">Auth + Sysmon + Network Telemetry</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">MITRE TACTICS DETECTED</span><i class="fa-solid fa-shield-halved metric-icon orange"></i></div>
+              <div class="metric-number text-orange">5</div>
+              <div class="metric-sub">Initial Access to Lateral Movement</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">TIME-TO-DETECT (MTTD)</span><i class="fa-solid fa-bolt metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">1.4m</div>
+              <div class="metric-sub">Autonomous graph engine</div>
+            </div>
+          </div>
+
+          <!-- KILL CHAIN VISUALIZER -->
+          <div class="ai-card" style="margin-top: 18px; padding: 22px;">
+            <div class="card-header" style="margin-bottom: 18px;">
+              <div>
+                <h2 class="card-title">Active Attack Kill Chain: Incident #INC-4819 (Laptop-352 Propagation)</h2>
+                <p style="font-size:11.5px; color:var(--text-secondary); margin-top:4px;">Autonomous graph correlation linking edge SSH brute force to internal SMB Pass-the-Ticket</p>
+              </div>
+              <span class="card-badge" style="color:#ff6879; border-color:rgba(207,34,46,0.3); background:rgba(207,34,46,0.1);">CRITICAL SEV-1</span>
+            </div>
+
+            <div class="killchain-steps-container">
+              <div class="killchain-step passed">
+                <span class="step-num">1</span>
+                <span class="step-title">Initial Access</span>
+                <span class="step-desc">SSH Brute-Force from Selectel RU (185.190.141.22)</span>
+                <span class="step-badge">DETECTED (ML: 99.2%)</span>
+              </div>
+              <div class="killchain-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="killchain-step passed">
+                <span class="step-num">2</span>
+                <span class="step-title">Execution</span>
+                <span class="step-desc">Malicious PowerShell encoded stager on Bastion Gateway</span>
+                <span class="step-badge">SYSMON EID 1</span>
+              </div>
+              <div class="killchain-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="killchain-step active-alert">
+                <span class="step-num">3</span>
+                <span class="step-title">Lateral Movement</span>
+                <span class="step-desc">Host Laptop-352 SMB Port 445 Pass-the-Ticket</span>
+                <span class="step-badge" style="background:#cf222e; color:white;">ACTIVE CONTAINMENT</span>
+              </div>
+              <div class="killchain-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="killchain-step warning">
+                <span class="step-num">4</span>
+                <span class="step-title">Privilege Escalation</span>
+                <span class="step-desc">svc_backup Kerberos TGT injection target DC-01</span>
+                <span class="step-badge">FLAGGED</span>
+              </div>
+              <div class="killchain-arrow"><i class="fa-solid fa-arrow-right"></i></div>
+              <div class="killchain-step blocked">
+                <span class="step-num">5</span>
+                <span class="step-title">Exfiltration</span>
+                <span class="step-desc">Edge Palo Alto DROP rule deployed</span>
+                <span class="step-badge" style="background:#10b981; color:#064e3b;">BLOCKED</span>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 6: ASSETS (ENTERPRISE ASSET INVENTORY)                     -->
+        <!-- ============================================================== -->
+        <section id="view-assets" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">ENTERPRISE INVENTORY &bull; ATTACK SURFACE</p>
+              <h2 class="view-title">Managed Assets &amp; Vulnerability Surface</h2>
+            </div>
+            <button class="toolbar-btn" id="refresh-assets-btn" type="button" title="Refresh assets">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">TOTAL ASSETS</span><i class="fa-solid fa-server metric-icon blue"></i></div>
+              <div class="metric-number">142</div>
+              <div class="metric-sub">Across Cloud, DMZ, and Internal</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">CRITICAL TIER-0</span><i class="fa-solid fa-shield-halved metric-icon orange"></i></div>
+              <div class="metric-number text-orange">18</div>
+              <div class="metric-sub">Domain Controllers &amp; Vaults</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">HIGH-RISK ASSETS</span><i class="fa-solid fa-triangle-exclamation metric-icon red"></i></div>
+              <div class="metric-number text-crimson">4</div>
+              <div class="metric-sub">Action required immediately</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">EDR AGENT HEALTH</span><i class="fa-solid fa-heart-pulse metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">98.6%</div>
+              <div class="metric-sub">121/124 nodes online</div>
+            </div>
+          </div>
+
+          <div class="ai-card" style="margin-top: 18px;">
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>ASSET HOSTNAME</th>
+                    <th>IP ADDRESS</th>
+                    <th>ROLE &amp; OS</th>
+                    <th>ZONE</th>
+                    <th>RISK SCORE</th>
+                    <th>AGENT STATUS</th>
+                    <th>ACTIONS</th>
+                  </tr>
+                </thead>
+                <tbody id="assets-table-body">
+                  <tr><td colspan="7" class="loading-state">Loading asset inventory...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 7: THREAT INTEL (GLOBAL FEEDS & INDICATORS)                -->
+        <!-- ============================================================== -->
+        <section id="view-threat-intel" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">THREAT INTELLIGENCE &bull; GLOBAL FEEDS</p>
+              <h2 class="view-title">Threat Feeds &amp; Indicator Database</h2>
+            </div>
+            <button class="card-action-btn-gemini" id="gemini-intel-btn" type="button">
+              <i class="fa-solid fa-sparkles"></i> ✦ Gemini Threat Brief
+            </button>
+          </div>
+
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">ACTIVE SINKHOLE IOCS</span><i class="fa-solid fa-virus-slash metric-icon red"></i></div>
+              <div class="metric-number text-crimson">1,420</div>
+              <div class="metric-sub">Automated block lists</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">CONFIDENCE &ge; 90%</span><i class="fa-solid fa-bullseye metric-icon orange"></i></div>
+              <div class="metric-number text-orange">284</div>
+              <div class="metric-sub">Confirmed malicious actors</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">FEEDS SYNCHRONIZED</span><i class="fa-solid fa-rotate metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">8/8</div>
+              <div class="metric-sub">AlienVault, CISA, abuse.ch, VT</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">EDGE DROPS PUSHED</span><i class="fa-solid fa-ban metric-icon blue"></i></div>
+              <div class="metric-number">52</div>
+              <div class="metric-sub">Active firewall rules</div>
+            </div>
+          </div>
+
+          <div class="ai-card" style="margin-top: 18px;">
+            <div class="card-header">
+              <h2 class="card-title">High-Fidelity Indicators of Compromise (IOC Feed)</h2>
+              <span class="card-badge">REAL-TIME SINKHOLE</span>
+            </div>
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>INDICATOR</th>
+                    <th>TYPE</th>
+                    <th>THREAT CATEGORY</th>
+                    <th>ASN / ORIGIN</th>
+                    <th>CONFIDENCE</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="intel-table-body">
+                  <tr><td colspan="7" class="loading-state">Loading threat indicators...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 8: SOAR (SECURITY ORCHESTRATION & PLAYBOOKS)               -->
+        <!-- ============================================================== -->
+        <section id="view-soar" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">AUTOMATION ENGINE &bull; ORCHESTRATION</p>
+              <h2 class="view-title">SOAR Defense Playbooks &amp; Execution</h2>
+            </div>
+            <button class="card-action-btn-gemini" id="gemini-soar-btn" type="button">
+              <i class="fa-solid fa-sparkles"></i> ✦ Recommend Playbook
+            </button>
+          </div>
+
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">ACTIVE PLAYBOOKS</span><i class="fa-solid fa-bolt metric-icon orange"></i></div>
+              <div class="metric-number text-orange">8</div>
+              <div class="metric-sub">Autonomous containment rules</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">24H EXECUTIONS</span><i class="fa-solid fa-play metric-icon blue"></i></div>
+              <div class="metric-number">42</div>
+              <div class="metric-sub">100% execution success rate</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">MEAN TIME TO CONTAIN</span><i class="fa-solid fa-stopwatch metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">18s</div>
+              <div class="metric-sub">From detection to firewall DROP</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">PENDING APPROVALS</span><i class="fa-solid fa-user-clock metric-icon red"></i></div>
+              <div class="metric-number text-crimson">1</div>
+              <div class="metric-sub">Host Laptop-352 isolation</div>
+            </div>
+          </div>
+
+          <div class="ai-card" style="margin-top: 18px;">
+            <div class="card-header">
+              <h2 class="card-title">Available Defense Playbooks Catalog</h2>
+              <span class="card-badge">ONE-CLICK EXECUTION</span>
+            </div>
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>PLAYBOOK NAME</th>
+                    <th>DESCRIPTION</th>
+                    <th>EXECUTION MODE</th>
+                    <th>24H RUNS</th>
+                    <th>STATUS</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="soar-playbooks-table-body">
+                  <tr><td colspan="6" class="loading-state">Loading playbooks catalog...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 9: RED TEAM (BREACH & ATTACK SIMULATION)                   -->
+        <!-- ============================================================== -->
+        <section id="view-red-team" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">ADVERSARY EMULATION &bull; MITRE ATT&CK</p>
+              <h2 class="view-title">Red Team Breach &amp; Attack Simulation</h2>
+            </div>
+            <button class="toolbar-btn" id="refresh-redteam-btn" type="button" title="Refresh MITRE Matrix">
+              <i class="fa-solid fa-arrows-rotate"></i>
+            </button>
+          </div>
+
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">MITRE ATT&CK COVERAGE</span><i class="fa-solid fa-cubes metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">84.6%</div>
+              <div class="metric-sub">8 core enterprise tactics</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">SIMULATIONS PASSED</span><i class="fa-solid fa-circle-check metric-icon blue"></i></div>
+              <div class="metric-number">28/30</div>
+              <div class="metric-sub">High detection fidelity</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">DETECTION FIDELITY</span><i class="fa-solid fa-gauge-high metric-icon orange"></i></div>
+              <div class="metric-number text-orange">96.2%</div>
+              <div class="metric-sub">Zero false negatives</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">DETECTION LATENCY</span><i class="fa-solid fa-bolt-lightning metric-icon red"></i></div>
+              <div class="metric-number text-crimson">4.8s</div>
+              <div class="metric-sub">Real-time ML scoring</div>
+            </div>
+          </div>
+
+          <div class="ai-card" style="margin-top: 18px; padding: 20px;">
+            <div class="card-header" style="margin-bottom: 14px;">
+              <h2 class="card-title">Active Adversary Simulation Exercises</h2>
+              <span class="card-badge">LIVE RUNNER</span>
+            </div>
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>EXERCISE ID</th>
+                    <th>SIMULATION CAMPAIGN</th>
+                    <th>TARGET HOST / SERVICE</th>
+                    <th>LAST RESULT</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="redteam-table-body">
+                  <tr><td colspan="5" class="loading-state">Loading simulations...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 10: ENDPOINTS (FLEET TELEMETRY & EDR)                      -->
+        <!-- ============================================================== -->
+        <section id="view-endpoints" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">EDR SENSORS &bull; HOST TELEMETRY</p>
+              <h2 class="view-title">Endpoints Fleet &amp; Sysmon Diagnostics</h2>
+            </div>
+            <button class="card-action-btn-gemini" id="gemini-endpoints-btn" type="button">
+              <i class="fa-solid fa-sparkles"></i> ✦ Gemini Host Diagnostics
+            </button>
+          </div>
+
+          <!-- SPOTLIGHT COMPROMISED HOST -->
+          <div class="ai-card" style="margin-bottom: 18px; border-left: 3px solid #cf222e; padding: 20px;">
+            <div class="card-header">
+              <div>
+                <span class="card-badge" style="background:#cf222e; color:white;">EDR ISOLATION FLAG</span>
+                <h2 class="card-title" style="margin-top:6px;">High-Risk Host Spotlight: Laptop-352 (IP: 10.0.12.35)</h2>
+                <p style="font-size:11.5px; color:var(--text-secondary); margin-top:2px;">User: <code>analyst_dev</code> &bull; OS: Windows 11 Enterprise (Build 22631) &bull; Threat: Anomalous SMB/RDP connections to DC-01</p>
+              </div>
+              <button class="confirm-block-btn" style="padding:6px 14px; font-size:11px;" onclick="window.couraaExecutePlaybook()">
+                <i class="fa-solid fa-shield"></i> Re-Verify EDR Isolation
+              </button>
+            </div>
+            <div style="background:#0c0e14; border:1px solid var(--border-card); border-radius:6px; padding:12px; margin-top:10px;">
+              <div style="font-size:10px; font-family:var(--font-mono); color:var(--text-muted); margin-bottom:6px;">SUSPICIOUS PROCESS LINEAGE:</div>
+              <div style="font-family:var(--font-mono); font-size:11.5px; line-height:1.7;">
+                <div><span style="color:var(--text-secondary);">PID 1140</span> &bull; <code>explorer.exe</code> [analyst_dev]</div>
+                <div style="padding-left:18px;"><span style="color:#fbbf24;">PID 4820</span> &bull; <code>cmd.exe /c powershell.exe -enc ...</code></div>
+                <div style="padding-left:36px;"><span style="color:#ff6879;">PID 6128</span> &bull; <code>powershell.exe (Pass-the-Ticket Kerberos Injection)</code> &rarr; <span style="color:#38bdf8;">Target: DC-01 (Port 445 SMB)</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ai-card">
+            <div class="card-header">
+              <h2 class="card-title">Monitored Fleet Endpoints</h2>
+              <span class="card-badge">EDR FLEET (124 NODES)</span>
+            </div>
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>HOST</th>
+                    <th>IP ADDRESS</th>
+                    <th>OS / ENVIRONMENT</th>
+                    <th>ACTIVE USER</th>
+                    <th>EDR AGENT</th>
+                    <th>RISK LEVEL</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="endpoints-table-body">
+                  <tr><td colspan="7" class="loading-state">Loading endpoints fleet...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 11: COMPLIANCE (SOC 2, CIS, PCI-DSS)                       -->
+        <!-- ============================================================== -->
+        <section id="view-compliance" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">REGULATORY FRAMEWORKS &bull; AUDIT AUDITING</p>
+              <h2 class="view-title">Compliance Governance &amp; Controls Audit</h2>
+            </div>
+            <button class="toolbar-btn" id="export-compliance-btn" type="button" title="Export Evidence Package">
+              <i class="fa-solid fa-file-arrow-down"></i> Export Evidence
+            </button>
+          </div>
+
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">SOC 2 TYPE II</span><i class="fa-solid fa-clipboard-check metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">96.0%</div>
+              <div class="metric-sub">48/50 Controls Verified</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">CIS BENCHMARK v8</span><i class="fa-solid fa-shield-halved metric-icon blue"></i></div>
+              <div class="metric-number">92.5%</div>
+              <div class="metric-sub">148/160 Benchmarks Pass</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">PCI-DSS v4.0 REQ 10</span><i class="fa-solid fa-lock metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">100%</div>
+              <div class="metric-sub">32/32 Logging Controls Pass</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">ISO/IEC 27001:2022</span><i class="fa-solid fa-certificate metric-icon orange"></i></div>
+              <div class="metric-number text-orange">94.0%</div>
+              <div class="metric-sub">88/93 Controls Verified</div>
+            </div>
+          </div>
+
+          <div class="ai-card" style="margin-top: 18px;">
+            <div class="card-header">
+              <h2 class="card-title">Automated Compliance Evidence &amp; Controls Audit</h2>
+              <span class="card-badge">CONTINUOUS MONITORING</span>
+            </div>
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>CONTROL ID</th>
+                    <th>FRAMEWORK</th>
+                    <th>SECURITY REQUIREMENT</th>
+                    <th>AUTOMATED EVIDENCE LOG</th>
+                    <th>STATUS</th>
+                  </tr>
+                </thead>
+                <tbody id="compliance-table-body">
+                  <tr><td colspan="5" class="loading-state">Loading compliance controls...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 12: REPORTS (EXECUTIVE BRIEFS & EXPORTS)                   -->
+        <!-- ============================================================== -->
+        <section id="view-reports" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">REPORTS &bull; INCIDENT BRIEFS</p>
+              <h2 class="view-title">Executive Briefs &amp; Forensic Reports</h2>
+            </div>
+            <button class="card-action-btn-gemini" id="gemini-report-btn" type="button">
+              <i class="fa-solid fa-sparkles"></i> ✦ Generate Gemini Brief
+            </button>
+          </div>
+
+          <div class="dashboard-metrics-grid">
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">TOTAL REPORTS</span><i class="fa-solid fa-file-lines metric-icon blue"></i></div>
+              <div class="metric-number">24</div>
+              <div class="metric-sub">Compiled security dossiers</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">SCHEDULED JOBS</span><i class="fa-solid fa-calendar-check metric-icon green"></i></div>
+              <div class="metric-number" style="color:var(--emerald-green);">4</div>
+              <div class="metric-sub">Weekly &amp; Monthly dispatches</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">EXPORT FORMATS</span><i class="fa-solid fa-file-pdf metric-icon orange"></i></div>
+              <div class="metric-number text-orange">PDF / CSV</div>
+              <div class="metric-sub">Auditor-ready artifacts</div>
+            </div>
+            <div class="metric-box">
+              <div class="metric-head"><span class="metric-title">AUTOMATION ENGINE</span><i class="fa-solid fa-microchip metric-icon red"></i></div>
+              <div class="metric-number text-crimson">ACTIVE</div>
+              <div class="metric-sub">COURAA autonomous pipeline</div>
+            </div>
+          </div>
+
+          <div class="ai-card" style="margin-top: 18px;">
+            <div class="card-header">
+              <h2 class="card-title">Available Security Report Templates</h2>
+              <span class="card-badge">ON-DEMAND COMPILER</span>
+            </div>
+            <div class="table-container-couraa">
+              <table class="couraa-table">
+                <thead>
+                  <tr>
+                    <th>TEMPLATE TITLE</th>
+                    <th>DESCRIPTION</th>
+                    <th>SCHEDULE</th>
+                    <th>FORMAT</th>
+                    <th>ACTION</th>
+                  </tr>
+                </thead>
+                <tbody id="reports-table-body">
+                  <tr><td colspan="5" class="loading-state">Loading report templates...</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </section>
+
+        <!-- ============================================================== -->
+        <!-- VIEW 13: SETTINGS (PLATFORM CONTROLS & API KEYS)                -->
+        <!-- ============================================================== -->
+        <section id="view-settings" class="view-panel">
+          <div class="alerts-view-header">
+            <div>
+              <p class="eyebrow">PLATFORM CONFIGURATION &bull; CONTROLS</p>
+              <h2 class="view-title">SOC Settings &amp; Defense Engine Policy</h2>
+            </div>
+            <button class="confirm-block-btn" id="save-settings-btn" type="button" style="padding:6px 16px;">
+              <i class="fa-solid fa-floppy-disk"></i> Save Settings
+            </button>
+          </div>
+
+          <div class="ai-two-column-grid">
+            <div class="ai-card" style="padding: 22px;">
+              <div class="card-header" style="margin-bottom: 14px;">
+                <h2 class="card-title">Firewall &amp; Containment Engine</h2>
+                <span class="card-badge">DEFENSE ENFORCEMENT</span>
+              </div>
+
+              <div class="gemini-form-group">
+                <label class="gemini-input-label">Containment Execution Mode</label>
+                <select id="settings-block-mode" class="gemini-model-select">
+                  <option value="simulate">simulate - Safe Dry Run (Simulates iptables DROP)</option>
+                  <option value="execute">execute - Real Execution (Runs iptables/firewall rules)</option>
+                </select>
+                <span class="gemini-field-hint">In simulate mode, containment is logged and tracked in SQLite without modifying host network adapters.</span>
+              </div>
+
+              <div class="gemini-form-group">
+                <label class="gemini-input-label">Critical Risk Threshold (%)</label>
+                <div class="gemini-input-wrap">
+                  <input type="number" id="settings-risk-threshold" class="gemini-key-input" value="90" min="50" max="100">
+                </div>
+                <span class="gemini-field-hint">Attacks with risk score &ge; this value trigger automatic Playbook recommendations.</span>
+              </div>
+
+              <div class="gemini-form-group">
+                <label class="gemini-input-label">Never-Block IP Whitelist (Comma-Separated)</label>
+                <div class="gemini-input-wrap">
+                  <input type="text" id="settings-never-block" class="gemini-key-input" value="127.0.0.1, 10.0.0.0/8, 192.168.1.0/24">
+                </div>
+                <span class="gemini-field-hint">Administrative subnets and local interfaces excluded from perimeter block rules.</span>
+              </div>
+            </div>
+
+            <div class="ai-card" style="padding: 22px;">
+              <div class="card-header" style="margin-bottom: 14px;">
+                <h2 class="card-title">AI Copilot &amp; Integration Webhooks</h2>
+                <span class="card-badge">GENERATIVE AI</span>
+              </div>
+
+              <div class="gemini-form-group">
+                <label class="gemini-input-label">AI Agent Provider</label>
+                <div class="gemini-input-wrap">
+                  <input type="text" class="gemini-key-input" value="Google Gemini (Auto-Discover)" readonly style="color:#38bdf8;">
+                </div>
+                <span class="gemini-field-hint">Configured via the top navigation bar 'Connect Gemini AI' dialog.</span>
+              </div>
+
+              <div class="gemini-form-group">
+                <label class="gemini-input-label">Slack Incident Notification Webhook</label>
+                <div class="gemini-input-wrap">
+                  <input type="text" id="settings-slack-webhook" class="gemini-key-input" placeholder="https://hooks.slack.com/services/..." value="https://hooks.slack.com/services/T00/B00/SOC_ALERTS">
+                </div>
+              </div>
+
+              <div class="gemini-form-group">
+                <label class="gemini-input-label">SIEM Telemetry Ingestion</label>
+                <div class="gemini-input-wrap">
+                  <input type="text" class="gemini-key-input" value="auth.log / syslog (Auto-Engineering active)" readonly>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- BLOCK IP CONFIRMATION MODAL -->
+  <dialog id="block-confirm-dialog" class="couraa-dialog">
+    <div class="dialog-content">
+      <div class="dialog-header">
+        <div class="dialog-icon-shield"><i class="fa-solid fa-shield-halved"></i></div>
+        <div>
+          <span class="dialog-eyebrow">FIREWALL CONTAINMENT ACTION</span>
+          <h3 class="dialog-title">Block Source IP Address</h3>
+        </div>
+      </div>
+      <p class="dialog-desc">You are about to deploy an edge firewall DROP rule for target: <code id="dialog-ip-target" class="dialog-code"></code>.</p>
+      <div class="dialog-status" id="dialog-status-msg"></div>
+      <div class="dialog-actions">
+        <button id="dialog-cancel-btn" class="dialog-btn cancel-btn" type="button">Cancel</button>
+        <button id="dialog-confirm-btn" class="dialog-btn confirm-block-btn" type="button">
+          <i class="fa-solid fa-ban"></i> Confirm Block
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- GOOGLE GEMINI CONFIGURATION MODAL -->
+  <dialog id="gemini-modal-dialog" class="couraa-dialog">
+    <div class="dialog-content gemini-dialog-content">
+      <div class="dialog-header">
+        <div class="dialog-icon-shield gemini-icon-shield"><i class="fa-solid fa-microchip"></i></div>
+        <div style="flex: 1;">
+          <span class="dialog-eyebrow">AUTONOMOUS AGENT INTEGRATION</span>
+          <h3 class="dialog-title">Google Gemini Copilot</h3>
+        </div>
+        <button id="close-gemini-modal-btn" class="dialog-x-close" type="button" aria-label="Close dialog">&times;</button>
+      </div>
+
+      <p class="dialog-desc">
+        Connect your <b>Google Gemini API Key</b> to power COURAA AI Analyst with real-time generative SOC intelligence, multi-turn threat correlation, and automated containment extraction.
+      </p>
+
+      <div class="dialog-status-card" id="gemini-status-card">
+        <div class="status-indicator-dot" id="gemini-status-dot"></div>
+        <div class="status-info">
+          <span class="status-primary" id="gemini-status-primary">Engine: COURAA Local Rule Engine</span>
+          <span class="status-secondary" id="gemini-status-secondary">Connect Gemini API key to activate cloud LLM reasoning</span>
+        </div>
+      </div>
+
+      <div class="gemini-form-group">
+        <label for="gemini-key-input" class="gemini-input-label">Gemini API Key</label>
+        <div class="gemini-input-wrap">
+          <input type="password" id="gemini-key-input" class="gemini-key-input" placeholder="AIzaSy..." autocomplete="off">
+          <button type="button" id="toggle-gemini-key-vis" class="gemini-eye-btn" title="Toggle Visibility">
+            <i class="fa-regular fa-eye"></i>
+          </button>
+        </div>
+        <span class="gemini-field-hint">Key is retained in your local session. Get your key free at <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">Google AI Studio</a>.</span>
+      </div>
+
+      <div class="gemini-form-group">
+        <label for="gemini-model-select" class="gemini-input-label">Gemini Model</label>
+        <select id="gemini-model-select" class="gemini-model-select">
+          <option value="auto" selected>Auto-Detect Best Available Model (Recommended)</option>
+          <option value="gemini-1.5-flash-latest">gemini-1.5-flash-latest</option>
+          <option value="gemini-1.5-pro-latest">gemini-1.5-pro-latest</option>
+          <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+          <option value="gemini-pro">gemini-pro</option>
+        </select>
+      </div>
+
+      <div class="dialog-feedback-msg" id="gemini-feedback-msg"></div>
+
+      <div class="dialog-actions gemini-dialog-actions">
+        <button id="disconnect-gemini-btn" class="dialog-btn cancel-btn" type="button" style="display: none;">
+          <i class="fa-solid fa-link-slash"></i> Disconnect
+        </button>
+        <button id="test-gemini-btn" class="dialog-btn test-btn" type="button">
+          <i class="fa-solid fa-bolt"></i> Test Connection
+        </button>
+        <button id="save-gemini-btn" class="dialog-btn confirm-block-btn gemini-save-btn" type="button">
+          <i class="fa-solid fa-check"></i> Save &amp; Activate
+        </button>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- TOAST NOTIFICATION -->
+  <div id="couraa-toast" class="couraa-toast" role="alert" aria-live="polite"></div>
+</body>
+</html>
